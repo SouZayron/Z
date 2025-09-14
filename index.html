@@ -9,7 +9,6 @@
 
   <style>
     :root{
-      --accent: #9be7ff;
       --glass-border: rgba(255,255,255,0.18);
       --text-shadow: 0 6px 28px rgba(2,6,23,0.45);
     }
@@ -79,16 +78,17 @@
       font-size:clamp(48px, 10vw, 100px);
       margin:0;
       text-transform:uppercase;
-      color:white;
+      color:#fff; /* branco puro */
       text-shadow:var(--text-shadow);
       cursor:pointer;
       transform:translate3d(0,0,0);
       will-change:transform;
+      animation: float 4s ease-in-out infinite;
     }
-    h1 .accent{
-      background:linear-gradient(90deg,#BEE9FF,#5CD1FF);
-      -webkit-background-clip:text;
-      color:transparent;
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
     p.subtitle{
@@ -161,7 +161,7 @@
   <main class="stage">
     <div class="glass" id="glass"></div>
     <div class="title-wrap">
-      <h1 id="title"><span class="accent">ZAYRON</span></h1>
+      <h1 id="title">ZAYRON</h1>
       <p class="subtitle" id="subtitle">Fundos, Pcbacks &amp; Xatspace</p>
     </div>
     <div class="screen-flash"></div>
