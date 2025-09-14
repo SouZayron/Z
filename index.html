@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZAYRON — Fundos, Pcbacks & Xatspace</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent: #9be7ff;
+      --glass-border: rgba(255,255,255,0.18);
+      --text-shadow: 0 6px 28px rgba(2,6,23,0.45);
+    }
+
+    *{box-sizing:border-box}
+    body,html{height:100%;margin:0}
+    body{
+      font-family: 'Inter', sans-serif;
+      color:#fff;
+      overflow:hidden;
+      background:#000;
+    }
+
+    .bg{
+      position:fixed;
+      inset:0;
+      background:url("https://xatimg.com/image/fB6gn8boerP2.gif") center/cover no-repeat;
+      z-index:0;
+    }
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:linear-gradient(180deg, rgba(2,6,23,0.28), rgba(4,12,34,0.62));
+      z-index:1;
+    }
+
+    .stage{
+      position:relative;
+      z-index:2;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      padding:2rem 1rem 6rem;
+    }
+
+    .glass{
+      position:absolute;
+      inset:0;
+      margin:auto;
+      max-width:70%;
+      height:55%;
+      min-height:180px;
+      border-radius:30px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border:1px solid var(--glass-border);
+      backdrop-filter:blur(14px) saturate(120%);
+      -webkit-backdrop-filter:blur(14px) saturate(120%);
+      box-shadow:0 10px 40px rgba(3,7,20,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+      pointer-events:none;
+    }
+
+    .title-wrap{
+      position:relative;
+      text-align:center;
+      z-index:3;
+    }
+
+    h1{
+      font-family:'Orbitron', sans-serif;
+      font-weight:900;
+      font-size:clamp(48px, 10vw, 100px);
+      margin:0;
+      text-transform:uppercase;
+      color:white;
+      text-shadow:var(--text-shadow);
+      cursor:pointer;
+      transform:translate3d(0,0,0);
+      will-change:transform;
+    }
+    h1 .accent{
+      background:linear-gradient(90deg,#BEE9FF,#5CD1FF);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+
+    p.subtitle{
+      margin:.8rem 0 0;
+      font-size:clamp(14px, 2.5vw, 20px);
+      color:rgba(255,255,255,0.9);
+      transform:translate3d(0,0,0);
+      will-change:transform;
+    }
+
+    /* Hover efeito global */
+    .screen-flash{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:10;
+      background: radial-gradient(circle at center, rgba(155,231,255,0.25), transparent 60%);
+      opacity:0;
+      transition:opacity .4s ease;
+    }
+    h1:hover ~ .screen-flash{
+      opacity:1;
+      animation: pulse 1.2s infinite alternate;
+    }
+    @keyframes pulse{
+      0%{background:radial-gradient(circle at center, rgba(155,231,255,0.25), transparent 60%);}
+      100%{background:radial-gradient(circle at center, rgba(155,231,255,0.4), transparent 70%);}
+    }
+
+    /* Footer */
+    footer{
+      position:fixed;
+      bottom:0;
+      width:100%;
+      text-align:center;
+      padding:1.2rem 1rem;
+      z-index:3;
+      background:rgba(0,0,0,0.3);
+      backdrop-filter:blur(6px);
+    }
+    footer .btn{
+      display:inline-block;
+      margin-bottom:.6rem;
+      padding:.7rem 1.6rem;
+      border-radius:999px;
+      background:linear-gradient(90deg,#5CD1FF,#8FD3FF);
+      color:#000;
+      font-weight:600;
+      text-decoration:none;
+      transition:transform .25s, box-shadow .25s;
+    }
+    footer .btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 6px 18px rgba(92,209,255,0.6);
+    }
+    footer p{
+      margin:0;
+      font-size:.9rem;
+      color:#eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="overlay"></div>
+
+  <main class="stage">
+    <div class="glass" id="glass"></div>
+    <div class="title-wrap">
+      <h1 id="title"><span class="accent">ZAYRON</span></h1>
+      <p class="subtitle" id="subtitle">Fundos, Pcbacks &amp; Xatspace</p>
+    </div>
+    <div class="screen-flash"></div>
+  </main>
+
+  <footer>
+    <a href="https://xat.com/mixhits" target="_blank" class="btn">Fale comigo!</a>
+    <p>Feito com 💜 Zayron - 2025</p>
+  </footer>
+
+  <script>
+    // Parallax inverso (texto segue lentamente em sentido contrário do mouse)
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+    const glass = document.getElementById('glass');
+
+    let mouseX = 0, mouseY = 0;
+    let currentX = 0, currentY = 0;
+    const ease = 0.08;
+    const maxOffset = 28;
+
+    function onMove(e){
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const cx = window.innerWidth/2;
+      const cy = window.innerHeight/2;
+      mouseX = -((clientX - cx)/cx) * maxOffset;
+      mouseY = -((clientY - cy)/cy) * (maxOffset*0.6);
+    }
+
+    function update(){
+      currentX += (mouseX - currentX) * ease;
+      currentY += (mouseY - currentY) * ease;
+
+      title.style.transform = `translate3d(${currentX * 0.6}px, ${currentY * 0.9}px, 0)`;
+      subtitle.style.transform = `translate3d(${currentX * 0.35}px, ${currentY * 0.5}px, 0)`;
+      glass.style.transform = `translateZ(0) rotateX(${currentY*0.03}deg) rotateY(${-currentX*0.03}deg)`;
+
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener('mousemove', onMove, {passive:true});
+    window.addEventListener('touchmove', onMove, {passive:true});
+    requestAnimationFrame(update);
+  </script>
+</body>
+</html>
