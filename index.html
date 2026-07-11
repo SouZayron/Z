@@ -136,6 +136,7 @@
   .lettering{
     position:absolute; inset:0;
     display:flex; align-items:center; justify-content:center;
+    gap: clamp(3.5rem, 14vw, 16rem);
     z-index:6;
     pointer-events:none;
   }
@@ -156,8 +157,8 @@
     white-space:nowrap;
     animation: breathe 5s ease-in-out infinite;
   }
-  .word.left{ transform: translateX(6%); }
-  .word.right{ transform: translateX(-6%); }
+  .word.left{ transform: translateX(0); }
+  .word.right{ transform: translateX(0); }
   @keyframes breathe{
     0%,100%{ filter: blur(0.3px) brightness(1); }
     50%{ filter: blur(0.6px) brightness(1.25); }
@@ -167,20 +168,23 @@
   .photo-wrap{
     position:absolute;
     top:50%; left:50%;
-    width:31.5%;
+    width:auto;
+    max-width:55%;
+    max-height:78vh;
     transform: translate(-50%,-46%);
     z-index:7;
     filter: drop-shadow(0 0 26px rgba(68,206,125,0.55)) drop-shadow(0 0 70px rgba(68,206,125,0.25));
   }
   .photo-mask{
     position:relative;
-    width:100%;
+    width:auto;
     line-height:0;
     -webkit-mask-image: radial-gradient(ellipse 82% 88% at 50% 42%, black 62%, transparent 100%);
     mask-image: radial-gradient(ellipse 82% 88% at 50% 42%, black 62%, transparent 100%);
   }
   .photo-mask img{
-    width:100%; height:auto;
+    width:auto; height:auto;
+    max-width:100%; max-height:78vh;
     object-fit:contain;
     display:block;
   }
@@ -223,7 +227,7 @@
 
   /* ---------- NAV ---------- */
   .nav{
-    position:absolute; top:0; left:0; right:0;
+    position:absolute; top:10%; left:0; right:0;
     z-index:20;
     display:flex; align-items:center; justify-content:center;
     padding:2.4vh 0 0 0;
@@ -541,7 +545,7 @@
 
   <div class="photo-wrap" data-depth="0.06">
     <div class="photo-mask">
-      <img src="https://xatimg.com/image/lhwMHHuuhXl5.png" alt="ENIGM 4TICO">
+      <img src="https://xatimg.com/image/piACspwiiZxX.png" alt="ENIGM 4TICO">
       <div class="rim"></div>
     </div>
   </div>
@@ -609,6 +613,12 @@
   }
 
   // ---------- DADOS DA GALERIA ----------
+  // Miniaturas passam por proxy de imagem com 50% de qualidade e largura reduzida
+  // (deixa a galeria mais leve); o lightbox sempre usa a imagem original em qualidade cheia.
+  function toThumbUrl(url){
+    return 'https://images.weserv.nl/?url=' + encodeURIComponent(url.replace(/^https?:\/\//,'')) + '&w=380&q=50&output=webp';
+  }
+
   const GALLERY_DATA = {
     fundos: [{"name": "Italia", "url": "https://xatimg.com/image/sfGmv5gHnGot.png"}, {"name": "Rádio Hitro Hits", "url": "https://xatimg.com/image/etLmmlHgNBet.png"}, {"name": "Sala", "url": "https://xatimg.com/image/On5PkQvneUeq.png"}, {"name": "Pyth Bots", "url": "https://xatimg.com/image/peqkdYHKp2dV.png"}, {"name": "MPO", "url": "https://xatimg.com/image/bizqq8wusDe8.png"}, {"name": "Mundo Smilis", "url": "https://xatimg.com/image/zACXDhF03Ltd.png"}, {"name": "Bar dos Amigos", "url": "https://xatimg.com/image/Kt1jD8QsVHHS.png"}, {"name": "Portugal Online", "url": "https://xatimg.com/image/CXClfcCKT38U.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/9e14xXvHQF6j.png"}, {"name": "MPO", "url": "https://xatimg.com/image/MRLd9B9NiIvp.png"}, {"name": "BeatsFM", "url": "https://xatimg.com/image/anM4Q1gaOSvd.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/dXf3MswrfEZx.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/fuZnu9wA6Zex.png"}, {"name": "Alta Vibe", "url": "https://xatimg.com/image/Usgxznzik7sY.png"}, {"name": "Alta Vibe", "url": "https://xatimg.com/image/hXFpmCItxpts.png"}, {"name": "Salinha da Fiona", "url": "https://xatimg.com/image/3kCWlYXoCvPH.png"}, {"name": "Trade", "url": "https://xatimg.com/image/KMNyc5qMn3Py.png"}, {"name": "RHB", "url": "https://xatimg.com/image/Kim31X3AxUpq.png"}, {"name": "Tudj", "url": "https://xatimg.com/image/p7sduVPrGtBO.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/urQ1sIcJsP84.png"}, {"name": "WRS", "url": "https://xatimg.com/image/dMix0Pb5VxeL.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/bQKHijqevmY6.png"}, {"name": "DiaeNoite", "url": "https://xatimg.com/image/zrpjxHMyA4rY.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/lGJH1sLYUDKe.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/ZHUANQKDXAme.png"}, {"name": "Portugal Online", "url": "https://xatimg.com/image/Pk9azxV77nQy.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/ob1Pp3nCSkkp.png"}, {"name": "Ostra Mix", "url": "https://xatimg.com/image/dnsTPlKLF7OY.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/rcmYK7Uj8utD.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/ToJA3OTBRZtV.png"}, {"name": "Labxat", "url": "https://xatimg.com/image/iTdxNVsPL4cY.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/oyDMZNJt0Txt.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/YXetIFSX4AUs.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/hqq9e4MQvr4c.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/CYECHyJDXbu7.png"}, {"name": "OstraMix", "url": "https://xatimg.com/image/7sHMvrN9Gvj1.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/PEmGPe4KEUNr.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/kha8EZSep4KF.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/FLLmBqU2e2ls.png"}, {"name": "Salinha da Fiona", "url": "https://xatimg.com/image/7ZR37RaxI7VC.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/Kbvh9NMjELao.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/ooi6iTan4ufK.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/zwwivG0pCXRb.png"}, {"name": "Mixhits", "url": "https://xatimg.com/image/z066M9O5Ha3o.png"}, {"name": "Wrs", "url": "https://xatimg.com/image/lhJUAapVsgFd.png"}, {"name": "Ajuda", "url": "https://xatimg.com/image/MZtaVgeSqn40.png"}, {"name": "Mix Hits", "url": "https://xatimg.com/image/wzc9YBI43X24.png"}, {"name": "Turma do Careca", "url": "https://xatimg.com/image/80M0E0tuWJG3.png"}, {"name": "Sociale", "url": "https://xatimg.com/image/LjLvSBWixT7w.png"}, {"name": "Turma do Careca", "url": "https://xatimg.com/image/7YE3ljCjqIAf.png"}, {"name": "Turma do Careca", "url": "https://xatimg.com/image/YG8rmh7PL9t3.png"}, {"name": "Boa onda", "url": "https://xatimg.com/image/r75T3QDA1Am4.png"}, {"name": "Mix Hits", "url": "https://xatimg.com/image/wClooVuAVf5H.png"}, {"name": "Avonts", "url": "https://xatimg.com/image/YBut26bjuDHy.png"}, {"name": "Grupo do Careca", "url": "https://xatimg.com/image/K6vIpn1QiScN.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/N0gVqmZXEc2D.png"}, {"name": "WRS", "url": "https://xatimg.com/image/H9v03sONIS5q.png"}, {"name": "Boa Onda", "url": "https://xatimg.com/image/A7RoByubf7io.png"}, {"name": "Parraderas VIP", "url": "https://xatimg.com/image/viZG9Q0n0Acy.png"}, {"name": "Mix Hits", "url": "https://xatimg.com/image/GVO2ZMoowYXL.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/Ky2j92pHVjTA.png"}, {"name": "Sado", "url": "https://xatimg.com/image/F7TQsh202nDF.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/XDAC76CizTUR.png"}, {"name": "Portugal Online", "url": "https://xatimg.com/image/DgveYptL5cr9.png"}, {"name": "Wrs", "url": "https://xatimg.com/image/rMixqNPh7OIn.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/xPKnTeubHmA1.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/3f1ug1Y2x7cc.png"}, {"name": "Dia e noite", "url": "https://xatimg.com/image/nWOjbFsbPjO8.png"}, {"name": "Mixhits", "url": "https://xatimg.com/image/kpzZkRTh68EP.png"}, {"name": "Alta Vibe", "url": "https://xatimg.com/image/WuKA0BJmAS1b.png"}, {"name": "Ostra Mix", "url": "https://xatimg.com/image/zApOXkW9qDN5.png"}, {"name": "RHB", "url": "https://xatimg.com/image/Y2c62VOOhgd8.png"}, {"name": "TUDJ", "url": "https://xatimg.com/image/dU0ORjYZRKYT.png"}, {"name": "TopHits", "url": "https://xatimg.com/image/vabVL43FdenZ.png"}, {"name": "Radio Tuga", "url": "https://xatimg.com/image/BzYap9VgNhSL.png"}, {"name": "WRS", "url": "https://xatimg.com/image/yxEgpzBr6ORX.png"}, {"name": "OstraDigital", "url": "https://xatimg.com/image/WRMlhGXnsbsj.png"}, {"name": "Doação", "url": "https://xatimg.com/image/k7BbRZz4dlpg.png"}],
     pcbacks: [{"name": "Morgan", "url": "https://xatimg.com/image/RLQNui3yPYq6.png"}, {"name": "Lion", "url": "https://xatimg.com/image/PM0qk3wD5bTQ.png"}, {"name": "Luuh", "url": "https://xatimg.com/image/sXK5NqGiFnak.gif"}, {"name": "Reven", "url": "https://xatimg.com/image/Q9NOFl7TG8y0.png"}, {"name": "Morena", "url": "https://xatimg.com/image/rthT7D7V5IrG.png"}, {"name": "BadGirl", "url": "https://xatimg.com/image/FOOgNzXbDixr.png"}, {"name": "Gabr", "url": "https://xatimg.com/image/KBz1TfFbGWCg.png"}, {"name": "Theuz", "url": "https://xatimg.com/image/rmh6vvpjtkkd.png"}, {"name": "Thay", "url": "https://xatimg.com/image/djXxy6F61rc3.png"}, {"name": "Jorge", "url": "https://xatimg.com/image/je4vzk1nu9BW.png"}, {"name": "Suxa", "url": "https://xatimg.com/image/Nv0RtN45WR0O.png"}, {"name": "Pretinha", "url": "https://xatimg.com/image/RXyLBCkHEsov.png"}, {"name": "DjIguinho", "url": "https://xatimg.com/image/p2eQgUdf8eAB.png"}, {"name": "Morgan", "url": "https://xatimg.com/image/pvOJaLbuqN8T.png"}, {"name": "James", "url": "https://xatimg.com/image/yHgJKKM1DZKX.png"}, {"name": "Khels", "url": "https://xatimg.com/image/pBtL0oGgEePs.png"}, {"name": "Drica", "url": "https://xatimg.com/image/LNmVoQ56a2bo.png"}, {"name": "Marisol", "url": "https://xatimg.com/image/Zxzl8t0XYicC.png"}, {"name": "Venon", "url": "https://xatimg.com/image/uqu2B83SYEtP.png"}, {"name": "Morena", "url": "https://xatimg.com/image/uVXzrRSeStsI.png"}, {"name": "Feeh", "url": "https://xatimg.com/image/2bpjTbYyXJXP.png"}, {"name": "Khels", "url": "https://xatimg.com/image/fjSX9EpaTLUx.jpg"}, {"name": "Zaru", "url": "https://xatimg.com/image/p3Wsqg0nooKd.png"}, {"name": "Morgan", "url": "https://xatimg.com/image/9xV8rQutG4mQ.png"}, {"name": "Gold", "url": "https://xatimg.com/image/MDjHrNR02uCQ.png"}, {"name": "Khels", "url": "https://xatimg.com/image/XwB3x7OckUGW.png"}],
@@ -646,7 +656,7 @@
       items.forEach(item=>{
         const t = document.createElement('div');
         t.className = 'thumb';
-        t.innerHTML = `<img src="${item.url}" alt="${item.name}" loading="lazy" decoding="async"><span class="thumb-label">${item.name}</span>`;
+        t.innerHTML = `<img src="${toThumbUrl(item.url)}" alt="${item.name}" loading="lazy" decoding="async"><span class="thumb-label">${item.name}</span>`;
         t.addEventListener('click', ()=> openLightbox(item));
         catGrid.appendChild(t);
       });
