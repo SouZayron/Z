@@ -1,211 +1,748 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ZAYRON — Fundos, Pcbacks & Xatspace</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENIGM 4TICO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800;900&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon: #44CE7D;
+    --mint: #DAFFE9;
+    --black: #050706;
+    --graphite: #161B19;
+    --white: #F3F6F4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    width:100%;height:100%;
+    overflow:hidden;
+    background:var(--black);
+    font-family:'Rajdhani',sans-serif;
+  }
+  .stage{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    aspect-ratio:16/9;
+    margin:auto;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 45%, rgba(68,206,125,0.14) 0%, rgba(68,206,125,0) 60%),
+      radial-gradient(ellipse 120% 90% at 50% 100%, rgba(68,206,125,0.10) 0%, rgba(0,0,0,0) 55%),
+      linear-gradient(180deg, #04100A 0%, #050706 45%, #030403 100%);
+  }
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  /* ---------- GRID / HUD LAYER ---------- */
+  .grid-layer{
+    position:absolute; inset:-5%;
+    background-image:
+      linear-gradient(rgba(68,206,125,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(68,206,125,0.07) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 30%, transparent 75%);
+    animation: gridDrift 26s linear infinite;
+    z-index:1;
+  }
+  @keyframes gridDrift{
+    0%{ background-position: 0 0, 0 0; }
+    100%{ background-position: 128px 64px, 64px 128px; }
+  }
 
-  <style>
-    :root{
-      --glass-border: rgba(255,255,255,0.18);
-      --text-shadow: 0 6px 28px rgba(2,6,23,0.45);
-    }
+  .scanline{
+    position:absolute; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, transparent, rgba(218,255,233,0.55), transparent);
+    filter: blur(0.5px);
+    z-index:2;
+    animation: scan 7s ease-in-out infinite;
+    opacity:0.5;
+  }
+  @keyframes scan{
+    0%{ top:8%; opacity:0; }
+    10%{ opacity:0.5; }
+    50%{ top:92%; opacity:0.35; }
+    90%{ opacity:0.5; }
+    100%{ top:8%; opacity:0; }
+  }
 
-    *{box-sizing:border-box}
-    body,html{height:100%;margin:0}
-    body{
-      font-family: 'Inter', sans-serif;
-      color:#fff;
-      overflow:hidden;
-      background:#000;
-    }
+  /* corner HUD brackets (graphic only, no text) */
+  .bracket{
+    position:absolute; width:90px; height:90px; z-index:5;
+    border: 2px solid rgba(218,255,233,0.55);
+    filter: drop-shadow(0 0 6px rgba(68,206,125,0.6));
+    opacity:0.75;
+  }
+  .bracket.tl{ top:4%; left:3%; border-right:none; border-bottom:none; }
+  .bracket.tr{ top:4%; right:3%; border-left:none; border-bottom:none; }
+  .bracket.bl{ bottom:4%; left:3%; border-right:none; border-top:none; }
+  .bracket.br{ bottom:4%; right:3%; border-left:none; border-top:none; }
 
-    /* Vídeo de fundo */
-    .bg-video{
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      z-index:0;
-    }
-    .overlay{
-      position:fixed;
-      inset:0;
-      background:linear-gradient(180deg, rgba(2,6,23,0.28), rgba(4,12,34,0.62));
-      z-index:1;
-    }
+  .hud-bar{
+    position:absolute; z-index:5;
+    background: linear-gradient(90deg, rgba(68,206,125,0.05), rgba(68,206,125,0.55), rgba(68,206,125,0.05));
+    height:3px; border-radius:2px;
+    filter: drop-shadow(0 0 4px rgba(68,206,125,0.7));
+    animation: pulseBar 3.2s ease-in-out infinite;
+  }
+  .hud-bar.b1{ top:6%; left:12%; width:120px; animation-delay:0s;}
+  .hud-bar.b2{ top:9%; left:12%; width:60px; opacity:0.5; animation-delay:0.4s;}
+  .hud-bar.b3{ top:6%; right:12%; width:120px; animation-delay:0.8s;}
+  .hud-bar.b4{ bottom:8%; right:12%; width:80px; animation-delay:1.2s;}
+  .hud-bar.b5{ bottom:8%; left:12%; width:100px; animation-delay:1.6s;}
+  @keyframes pulseBar{
+    0%,100%{ opacity:0.35; transform:scaleX(1); }
+    50%{ opacity:1; transform:scaleX(1.06); }
+  }
 
-    .stage{
-      position:relative;
-      z-index:2;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      padding:2rem 1rem 6rem;
-    }
+  .hud-dot{
+    position:absolute; width:6px; height:6px; border-radius:50%;
+    background: var(--neon);
+    box-shadow:0 0 8px 2px rgba(68,206,125,0.8);
+    animation: dotBlink 2.4s ease-in-out infinite;
+    z-index:5;
+  }
 
-    .glass{
-      position:absolute;
-      inset:0;
-      margin:auto;
-      max-width:70%;
-      height:55%;
-      min-height:180px;
-      border-radius:30px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      border:1px solid var(--glass-border);
-      backdrop-filter:blur(14px) saturate(120%);
-      -webkit-backdrop-filter:blur(14px) saturate(120%);
-      box-shadow:0 10px 40px rgba(3,7,20,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
-      pointer-events:none;
-    }
+  /* ---------- HOLOGRAPHIC PANELS ---------- */
+  .panel{
+    position:absolute;
+    border:1px solid rgba(218,255,233,0.25);
+    background: linear-gradient(135deg, rgba(68,206,125,0.10), rgba(218,255,233,0.03));
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 30px rgba(68,206,125,0.08) inset;
+    z-index:3;
+  }
+  .panel.p1{ width:220px; height:130px; top:10%; left:6%; transform:skew(-6deg,-2deg) rotate(-4deg); opacity:0.22; }
+  .panel.p2{ width:180px; height:100px; bottom:14%; right:8%; transform:skew(5deg,2deg) rotate(3deg); opacity:0.18; }
+  .panel.p3{ width:140px; height:220px; top:20%; right:4%; transform:skew(0deg,-4deg) rotate(6deg); opacity:0.15; }
 
-    .title-wrap{
-      position:relative;
-      text-align:center;
-      z-index:3;
-    }
+  /* ---------- FLOATING PARTICLES ---------- */
+  .particles{ position:absolute; inset:0; z-index:4; pointer-events:none; }
+  .particle{
+    position:absolute; border-radius:50%;
+    background: radial-gradient(circle, var(--mint) 0%, var(--neon) 60%, transparent 100%);
+    opacity:0.7;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) translateX(0); opacity:0; }
+    10%{ opacity:0.8; }
+    90%{ opacity:0.5; }
+    100%{ transform:translateY(-90vh) translateX(20px); opacity:0; }
+  }
 
-    h1{
-      font-family:'Orbitron', sans-serif;
-      font-weight:900;
-      font-size:clamp(48px, 10vw, 100px);
-      margin:0;
-      text-transform:uppercase;
-      color:#fff; /* branco puro */
-      text-shadow:var(--text-shadow);
-      cursor:pointer;
-      transform:translate3d(0,0,0);
-      will-change:transform;
-      animation: float 4s ease-in-out infinite;
-    }
+  /* ---------- LETTERING ---------- */
+  .lettering{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    z-index:6;
+    pointer-events:none;
+  }
+  .word{
+    font-family:'Orbitron', sans-serif;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    font-size:clamp(5rem, 15vw, 15rem);
+    line-height:1;
+    color: rgba(218,255,233,0.16);
+    -webkit-text-stroke: 1.5px rgba(218,255,233,0.35);
+    text-shadow:
+      0 0 18px rgba(68,206,125,0.55),
+      0 0 46px rgba(68,206,125,0.35),
+      0 0 90px rgba(68,206,125,0.18);
+    filter: blur(0.3px);
+    white-space:nowrap;
+    animation: breathe 5s ease-in-out infinite;
+  }
+  .word.left{ transform: translateX(6%); }
+  .word.right{ transform: translateX(-6%); }
+  @keyframes breathe{
+    0%,100%{ filter: blur(0.3px) brightness(1); }
+    50%{ filter: blur(0.6px) brightness(1.25); }
+  }
 
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
+  /* ---------- PHOTO ---------- */
+  .photo-wrap{
+    position:absolute;
+    top:50%; left:50%;
+    width:45%;
+    aspect-ratio: 3/4;
+    transform: translate(-50%,-46%);
+    z-index:7;
+    filter: drop-shadow(0 0 26px rgba(68,206,125,0.55)) drop-shadow(0 0 70px rgba(68,206,125,0.25));
+  }
+  .photo-mask{
+    position:relative;
+    width:100%; height:100%;
+    -webkit-mask-image: radial-gradient(ellipse 78% 92% at 50% 42%, black 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse 78% 92% at 50% 42%, black 62%, transparent 100%);
+  }
+  .photo-mask img{
+    width:100%; height:100%;
+    object-fit:cover;
+    object-position: 50% 20%;
+    display:block;
+  }
+  .rim{
+    position:absolute; inset:0;
+    background: linear-gradient(100deg, transparent 55%, rgba(68,206,125,0.55) 78%, rgba(218,255,233,0.75) 92%, transparent 100%);
+    mix-blend-mode: screen;
+    -webkit-mask-image: radial-gradient(ellipse 78% 92% at 50% 42%, black 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse 78% 92% at 50% 42%, black 62%, transparent 100%);
+    opacity:0.55;
+  }
+  .ground-glow{
+    position:absolute; left:50%; bottom:-2%;
+    width:60%; height:14%;
+    transform:translateX(-50%);
+    background: radial-gradient(ellipse, rgba(68,206,125,0.55) 0%, transparent 72%);
+    filter: blur(10px);
+    z-index:6;
+  }
 
-    p.subtitle{
-      margin:.8rem 0 0;
-      font-size:clamp(14px, 2.5vw, 20px);
-      color:rgba(255,255,255,0.9);
-      transform:translate3d(0,0,0);
-      will-change:transform;
-    }
+  /* fine grain / vignette overlay */
+  .vignette{
+    position:absolute; inset:0; z-index:9; pointer-events:none;
+    background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 55%, rgba(0,0,0,0.65) 100%);
+  }
+  .smoke{
+    position:absolute; inset:0; z-index:5; pointer-events:none;
+    background: radial-gradient(ellipse 60% 30% at 30% 85%, rgba(218,255,233,0.05), transparent 70%),
+                radial-gradient(ellipse 50% 25% at 75% 90%, rgba(68,206,125,0.06), transparent 70%);
+    animation: smokeDrift 12s ease-in-out infinite;
+  }
+  @keyframes smokeDrift{
+    0%,100%{ transform:translateX(0); opacity:0.8;}
+    50%{ transform:translateX(30px); opacity:1;}
+  }
 
-    /* Hover efeito global */
-    .screen-flash{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:10;
-      background: radial-gradient(circle at center, rgba(155,231,255,0.25), transparent 60%);
-      opacity:0;
-      transition:opacity .4s ease;
-    }
-    h1:hover ~ .screen-flash{
-      opacity:1;
-      animation: pulse 1.2s infinite alternate;
-    }
-    @keyframes pulse{
-      0%{background:radial-gradient(circle at center, rgba(155,231,255,0.25), transparent 60%);}
-      100%{background:radial-gradient(circle at center, rgba(155,231,255,0.4), transparent 70%);}
-    }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
 
-    /* Footer */
-    footer{
-      position:fixed;
-      bottom:0;
-      width:100%;
-      text-align:center;
-      padding:1.2rem 1rem;
-      z-index:3;
-      background:rgba(0,0,0,0.3);
-      backdrop-filter:blur(6px);
-    }
-    footer .btn{
-      display:inline-block;
-      margin-bottom:.6rem;
-      padding:.7rem 1.6rem;
-      border-radius:999px;
-      background:linear-gradient(90deg,#5CD1FF,#8FD3FF);
-      color:#000;
-      font-weight:600;
-      text-decoration:none;
-      transition:transform .25s, box-shadow .25s;
-    }
-    footer .btn:hover{
-      transform:translateY(-3px);
-      box-shadow:0 6px 18px rgba(92,209,255,0.6);
-    }
-    footer p{
-      margin:0;
-      font-size:.9rem;
-      color:#eee;
-    }
-  </style>
+  /* ---------- NAV ---------- */
+  .nav{
+    position:absolute; top:0; left:0; right:0;
+    z-index:20;
+    display:flex; align-items:center; justify-content:center;
+    padding:2.4vh 0 0 0;
+    pointer-events:none;
+  }
+  .nav-inner{
+    pointer-events:all;
+    display:flex; align-items:center; gap:clamp(1.8rem, 3vw, 3.2rem);
+    padding: 0.8rem 2.4rem;
+    border:1px solid rgba(218,255,233,0.25);
+    background: rgba(10,16,13,0.45);
+    backdrop-filter: blur(14px);
+    border-radius:999px;
+    box-shadow: 0 0 24px rgba(68,206,125,0.12), 0 0 0 1px rgba(68,206,125,0.05) inset;
+  }
+  .nav-item{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-size:0.9rem;
+    color: var(--mint);
+    text-decoration:none;
+    background:none;
+    border:none;
+    cursor:pointer;
+    position:relative;
+    padding:0.3rem 0.1rem;
+    opacity:0.85;
+    transition: opacity .3s ease, text-shadow .3s ease;
+  }
+  .nav-item::after{
+    content:'';
+    position:absolute; left:0; bottom:-6px;
+    width:0%; height:1.5px;
+    background: var(--neon);
+    box-shadow:0 0 8px rgba(68,206,125,0.9);
+    transition: width .35s ease;
+  }
+  .nav-item:hover, .nav-item.active{
+    opacity:1;
+    text-shadow: 0 0 12px rgba(68,206,125,0.85);
+  }
+  .nav-item:hover::after, .nav-item.active::after{ width:100%; }
+  .nav-dot{
+    width:5px; height:5px; border-radius:50%;
+    background: var(--neon);
+    box-shadow:0 0 6px 2px rgba(68,206,125,0.8);
+    opacity:0.7;
+  }
+
+  /* ---------- GALERIA OVERLAY ---------- */
+  .gallery-overlay{
+    position:absolute; inset:0; z-index:50;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(3,6,4,0.55);
+    backdrop-filter: blur(22px) saturate(120%);
+    -webkit-backdrop-filter: blur(22px) saturate(120%);
+    opacity:0; pointer-events:none;
+    transition: opacity .5s ease;
+  }
+  .gallery-overlay.open{
+    opacity:1; pointer-events:all;
+  }
+  .gallery-panel{
+    width:min(1200px, 84%);
+    transform: translateY(14px) scale(0.98);
+    opacity:0;
+    transition: transform .5s ease, opacity .5s ease;
+    text-align:center;
+  }
+  .gallery-overlay.open .gallery-panel{
+    transform: translateY(0) scale(1);
+    opacity:1;
+  }
+  .gallery-eyebrow{
+    font-family:'Orbitron', sans-serif;
+    font-weight:800;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    font-size:0.85rem;
+    color: var(--neon);
+    text-shadow:0 0 14px rgba(68,206,125,0.7);
+    margin-bottom: clamp(1.2rem, 3vh, 2.4rem);
+  }
+  .gallery-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(0.9rem, 1.6vw, 1.6rem);
+  }
+  .gallery-card{
+    position:relative;
+    padding: clamp(1.6rem,3vh,2.6rem) 1rem;
+    border:1px solid rgba(218,255,233,0.22);
+    background: linear-gradient(160deg, rgba(68,206,125,0.10), rgba(218,255,233,0.02));
+    border-radius:14px;
+    cursor:pointer;
+    overflow:hidden;
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .gallery-card::before{
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(circle at 50% 0%, rgba(68,206,125,0.35), transparent 65%);
+    opacity:0;
+    transition: opacity .35s ease;
+  }
+  .gallery-card:hover{
+    transform: translateY(-6px);
+    border-color: rgba(68,206,125,0.75);
+    box-shadow: 0 0 30px rgba(68,206,125,0.28);
+  }
+  .gallery-card:hover::before{ opacity:1; }
+  .gallery-card-label{
+    position:relative; z-index:1;
+    font-family:'Orbitron', sans-serif;
+    font-weight:700;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    font-size:clamp(0.95rem, 1.3vw, 1.15rem);
+    color: var(--white);
+  }
+  .gallery-close{
+    position:absolute; top:22px; right:26px;
+    width:38px; height:38px;
+    border:1px solid rgba(218,255,233,0.35);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; background:rgba(10,16,13,0.4);
+    color:var(--mint);
+    font-family:'Rajdhani',sans-serif; font-size:1.1rem;
+    transition: box-shadow .3s ease, transform .3s ease;
+  }
+  .gallery-close:hover{ box-shadow:0 0 16px rgba(68,206,125,0.6); transform: rotate(90deg); }
+
+  /* ---------- CATEGORY (THUMBNAIL) VIEW ---------- */
+  .cat-overlay{
+    position:absolute; inset:0; z-index:60;
+    background: rgba(2,5,3,0.72);
+    backdrop-filter: blur(18px) saturate(115%);
+    -webkit-backdrop-filter: blur(18px) saturate(115%);
+    opacity:0; pointer-events:none;
+    transition: opacity .45s ease;
+    display:flex; flex-direction:column;
+    padding: clamp(1.6rem,4vh,3.2rem) clamp(1.6rem,5vw,4.5rem);
+  }
+  .cat-overlay.open{ opacity:1; pointer-events:all; }
+  .cat-header{
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    margin-bottom: clamp(1.2rem, 2.4vh, 2rem);
+    flex:0 0 auto;
+  }
+  .cat-title{
+    font-family:'Orbitron', sans-serif;
+    font-weight:800;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    font-size:clamp(1.1rem, 2vw, 1.6rem);
+    color: var(--mint);
+    text-shadow:0 0 16px rgba(68,206,125,0.7);
+  }
+  .cat-back{
+    position:absolute; left:0;
+    display:flex; align-items:center; gap:0.5rem;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600; letter-spacing:0.15em; text-transform:uppercase;
+    font-size:0.85rem;
+    color:var(--mint); opacity:0.85;
+    cursor:pointer; background:none; border:none;
+  }
+  .cat-back:hover{ opacity:1; text-shadow:0 0 10px rgba(68,206,125,0.8); }
+  .cat-close{
+    position:absolute; right:0;
+    width:38px; height:38px;
+    border:1px solid rgba(218,255,233,0.35);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; background:rgba(10,16,13,0.4);
+    color:var(--mint);
+    transition: box-shadow .3s ease, transform .3s ease;
+  }
+  .cat-close:hover{ box-shadow:0 0 16px rgba(68,206,125,0.6); transform: rotate(90deg); }
+
+  .cat-grid-wrap{
+    flex:1 1 auto;
+    overflow-y:auto;
+    padding-right:0.4rem;
+  }
+  .cat-grid-wrap::-webkit-scrollbar{ width:6px; }
+  .cat-grid-wrap::-webkit-scrollbar-thumb{ background: rgba(68,206,125,0.4); border-radius:4px; }
+  .cat-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: clamp(0.7rem, 1.1vw, 1.1rem);
+  }
+  .thumb{
+    position:relative;
+    aspect-ratio: 4 / 3;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid rgba(218,255,233,0.18);
+    cursor:pointer;
+    background: rgba(255,255,255,0.02);
+    transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+  }
+  .thumb img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+    transition: transform .4s ease, filter .4s ease;
+  }
+  .thumb::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.55) 100%);
+    opacity:0.7;
+    transition: opacity .3s ease;
+  }
+  .thumb:hover{
+    border-color: rgba(68,206,125,0.75);
+    box-shadow:0 0 18px rgba(68,206,125,0.35);
+    transform: translateY(-3px);
+  }
+  .thumb:hover img{ transform: scale(1.08); filter:brightness(1.05); }
+  .thumb-label{
+    position:absolute; left:8px; bottom:6px; z-index:1;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600; letter-spacing:0.06em;
+    font-size:0.72rem; text-transform:uppercase;
+    color: var(--white);
+    text-shadow:0 0 6px rgba(0,0,0,0.8);
+  }
+
+  /* ---------- LIGHTBOX (tamanho real) ---------- */
+  .lightbox{
+    position:absolute; inset:0; z-index:80;
+    background: rgba(1,3,2,0.88);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none;
+    transition: opacity .35s ease;
+  }
+  .lightbox.open{ opacity:1; pointer-events:all; }
+  .lightbox img{
+    max-width:88vw; max-height:82vh;
+    width:auto; height:auto;
+    border-radius:8px;
+    box-shadow: 0 0 40px rgba(68,206,125,0.35), 0 0 0 1px rgba(218,255,233,0.2);
+    transform: scale(0.96);
+    transition: transform .35s ease;
+  }
+  .lightbox.open img{ transform: scale(1); }
+  .lightbox-caption{
+    position:absolute; bottom:6%; left:50%; transform:translateX(-50%);
+    font-family:'Rajdhani',sans-serif;
+    letter-spacing:0.12em; text-transform:uppercase;
+    font-size:0.85rem; color:var(--mint); opacity:0.85;
+  }
+  .lightbox-close{
+    position:absolute; top:4%; right:4%;
+    width:42px; height:42px;
+    border:1px solid rgba(218,255,233,0.35);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; background:rgba(10,16,13,0.5);
+    color:var(--mint);
+    transition: box-shadow .3s ease, transform .3s ease;
+  }
+  .lightbox-close:hover{ box-shadow:0 0 16px rgba(68,206,125,0.6); transform: rotate(90deg); }
+</style>
 </head>
 <body>
-  <!-- Vídeo de fundo -->
-  <video class="bg-video" autoplay muted loop playsinline>
-    <source src="https://cdn.pixabay.com/video/2023/11/28/191252-890894246_large.mp4" type="video/mp4">
-  </video>
-  <div class="overlay"></div>
 
-  <main class="stage">
-    <div class="glass" id="glass"></div>
-    <div class="title-wrap">
-      <h1 id="title">ZAYRON</h1>
-      <p class="subtitle" id="subtitle">Fundos, Pcbacks &amp; Xatspace</p>
+<div class="stage" id="stage">
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-item active" data-view="home">Home</a>
+      <span class="nav-dot"></span>
+      <button type="button" class="nav-item" id="galeriaBtn" data-view="galeria">Galeria</button>
+      <span class="nav-dot"></span>
+      <a href="#contato" class="nav-item" data-view="contato">Contato</a>
     </div>
-    <div class="screen-flash"></div>
-  </main>
+  </nav>
 
-  <footer>
-    <a href="https://xat.com/mixhits" target="_blank" class="btn">Fale comigo!</a>
-    <p>Feito com 💜 Zayron - 2025</p>
-  </footer>
+  <div class="grid-layer" data-depth="0.02"></div>
+  <div class="smoke"></div>
 
-  <script>
-    // Parallax inverso
-    const title = document.getElementById('title');
-    const subtitle = document.getElementById('subtitle');
-    const glass = document.getElementById('glass');
+  <div class="panel p1" data-depth="0.04"></div>
+  <div class="panel p2" data-depth="0.05"></div>
+  <div class="panel p3" data-depth="0.03"></div>
 
-    let mouseX = 0, mouseY = 0;
-    let currentX = 0, currentY = 0;
-    const ease = 0.08;
-    const maxOffset = 28;
+  <div class="particles" id="particles"></div>
 
-    function onMove(e){
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      const cx = window.innerWidth/2;
-      const cy = window.innerHeight/2;
-      mouseX = -((clientX - cx)/cx) * maxOffset;
-      mouseY = -((clientY - cy)/cy) * (maxOffset*0.6);
+  <div class="bracket tl"></div>
+  <div class="bracket tr"></div>
+  <div class="bracket bl"></div>
+  <div class="bracket br"></div>
+  <div class="hud-bar b1"></div>
+  <div class="hud-bar b2"></div>
+  <div class="hud-bar b3"></div>
+  <div class="hud-bar b4"></div>
+  <div class="hud-bar b5"></div>
+
+  <div class="scanline"></div>
+
+  <div class="lettering" data-depth="0.015">
+    <span class="word left">ENIGM</span>
+    <span class="word right">4TICO</span>
+  </div>
+
+  <div class="ground-glow"></div>
+
+  <div class="photo-wrap" data-depth="0.06">
+    <div class="photo-mask">
+      <img src="https://xatimg.com/image/lhwMHHuuhXl5.png" alt="ENIGM 4TICO">
+      <div class="rim"></div>
+    </div>
+  </div>
+
+  <div class="vignette"></div>
+
+  <div class="gallery-overlay" id="galleryOverlay">
+    <div class="gallery-panel">
+      <div class="gallery-eyebrow">Galeria</div>
+      <div class="gallery-grid">
+        <div class="gallery-card" data-cat="fundos"><div class="gallery-card-label">Fundos</div></div>
+        <div class="gallery-card" data-cat="pcbacks"><div class="gallery-card-label">Pcbacks</div></div>
+        <div class="gallery-card" data-cat="pstyle"><div class="gallery-card-label">Pstyle</div></div>
+        <div class="gallery-card" data-cat="xatspaces"><div class="gallery-card-label">Xatspaces</div></div>
+      </div>
+    </div>
+    <div class="gallery-close" id="galleryClose">✕</div>
+  </div>
+
+  <div class="cat-overlay" id="catOverlay">
+    <div class="cat-header">
+      <button type="button" class="cat-back" id="catBack">‹ Voltar</button>
+      <div class="cat-title" id="catTitle">Fundos</div>
+      <div class="cat-close" id="catClose">✕</div>
+    </div>
+    <div class="cat-grid-wrap">
+      <div class="cat-grid" id="catGrid"></div>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-close" id="lightboxClose">✕</div>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<script>
+  // random HUD dots
+  const stage = document.getElementById('stage');
+  for(let i=0;i<10;i++){
+    const d = document.createElement('div');
+    d.className = 'hud-dot';
+    d.style.left = (5 + Math.random()*90) + '%';
+    d.style.top = (5 + Math.random()*90) + '%';
+    d.style.animationDelay = (Math.random()*2.4) + 's';
+    stage.appendChild(d);
+  }
+
+  // floating particles
+  const pField = document.getElementById('particles');
+  const N = 34;
+  for(let i=0;i<N;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random()*3.5;
+    p.style.width = size+'px';
+    p.style.height = size+'px';
+    p.style.left = Math.random()*100 + '%';
+    p.style.bottom = (-5 - Math.random()*10) + '%';
+    const dur = 8 + Math.random()*10;
+    p.style.animationDuration = dur+'s';
+    p.style.animationDelay = (Math.random()*dur) + 's';
+    pField.appendChild(p);
+  }
+
+  // ---------- DADOS DA GALERIA ----------
+  const GALLERY_DATA = {
+    fundos: [{"name": "Italia", "url": "https://xatimg.com/image/sfGmv5gHnGot.png"}, {"name": "Rádio Hitro Hits", "url": "https://xatimg.com/image/etLmmlHgNBet.png"}, {"name": "Sala", "url": "https://xatimg.com/image/On5PkQvneUeq.png"}, {"name": "Pyth Bots", "url": "https://xatimg.com/image/peqkdYHKp2dV.png"}, {"name": "MPO", "url": "https://xatimg.com/image/bizqq8wusDe8.png"}, {"name": "Mundo Smilis", "url": "https://xatimg.com/image/zACXDhF03Ltd.png"}, {"name": "Bar dos Amigos", "url": "https://xatimg.com/image/Kt1jD8QsVHHS.png"}, {"name": "Portugal Online", "url": "https://xatimg.com/image/CXClfcCKT38U.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/9e14xXvHQF6j.png"}, {"name": "MPO", "url": "https://xatimg.com/image/MRLd9B9NiIvp.png"}, {"name": "BeatsFM", "url": "https://xatimg.com/image/anM4Q1gaOSvd.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/dXf3MswrfEZx.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/fuZnu9wA6Zex.png"}, {"name": "Alta Vibe", "url": "https://xatimg.com/image/Usgxznzik7sY.png"}, {"name": "Alta Vibe", "url": "https://xatimg.com/image/hXFpmCItxpts.png"}, {"name": "Salinha da Fiona", "url": "https://xatimg.com/image/3kCWlYXoCvPH.png"}, {"name": "Trade", "url": "https://xatimg.com/image/KMNyc5qMn3Py.png"}, {"name": "RHB", "url": "https://xatimg.com/image/Kim31X3AxUpq.png"}, {"name": "Tudj", "url": "https://xatimg.com/image/p7sduVPrGtBO.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/urQ1sIcJsP84.png"}, {"name": "WRS", "url": "https://xatimg.com/image/dMix0Pb5VxeL.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/bQKHijqevmY6.png"}, {"name": "DiaeNoite", "url": "https://xatimg.com/image/zrpjxHMyA4rY.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/lGJH1sLYUDKe.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/ZHUANQKDXAme.png"}, {"name": "Portugal Online", "url": "https://xatimg.com/image/Pk9azxV77nQy.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/ob1Pp3nCSkkp.png"}, {"name": "Ostra Mix", "url": "https://xatimg.com/image/dnsTPlKLF7OY.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/rcmYK7Uj8utD.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/ToJA3OTBRZtV.png"}, {"name": "Labxat", "url": "https://xatimg.com/image/iTdxNVsPL4cY.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/oyDMZNJt0Txt.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/YXetIFSX4AUs.png"}, {"name": "Point da Galera", "url": "https://xatimg.com/image/hqq9e4MQvr4c.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/CYECHyJDXbu7.png"}, {"name": "OstraMix", "url": "https://xatimg.com/image/7sHMvrN9Gvj1.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/PEmGPe4KEUNr.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/kha8EZSep4KF.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/FLLmBqU2e2ls.png"}, {"name": "Salinha da Fiona", "url": "https://xatimg.com/image/7ZR37RaxI7VC.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/Kbvh9NMjELao.png"}, {"name": "Dia e Noite", "url": "https://xatimg.com/image/ooi6iTan4ufK.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/zwwivG0pCXRb.png"}, {"name": "Mixhits", "url": "https://xatimg.com/image/z066M9O5Ha3o.png"}, {"name": "Wrs", "url": "https://xatimg.com/image/lhJUAapVsgFd.png"}, {"name": "Ajuda", "url": "https://xatimg.com/image/MZtaVgeSqn40.png"}, {"name": "Mix Hits", "url": "https://xatimg.com/image/wzc9YBI43X24.png"}, {"name": "Turma do Careca", "url": "https://xatimg.com/image/80M0E0tuWJG3.png"}, {"name": "Sociale", "url": "https://xatimg.com/image/LjLvSBWixT7w.png"}, {"name": "Turma do Careca", "url": "https://xatimg.com/image/7YE3ljCjqIAf.png"}, {"name": "Turma do Careca", "url": "https://xatimg.com/image/YG8rmh7PL9t3.png"}, {"name": "Boa onda", "url": "https://xatimg.com/image/r75T3QDA1Am4.png"}, {"name": "Mix Hits", "url": "https://xatimg.com/image/wClooVuAVf5H.png"}, {"name": "Avonts", "url": "https://xatimg.com/image/YBut26bjuDHy.png"}, {"name": "Grupo do Careca", "url": "https://xatimg.com/image/K6vIpn1QiScN.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/N0gVqmZXEc2D.png"}, {"name": "WRS", "url": "https://xatimg.com/image/H9v03sONIS5q.png"}, {"name": "Boa Onda", "url": "https://xatimg.com/image/A7RoByubf7io.png"}, {"name": "Parraderas VIP", "url": "https://xatimg.com/image/viZG9Q0n0Acy.png"}, {"name": "Mix Hits", "url": "https://xatimg.com/image/GVO2ZMoowYXL.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/Ky2j92pHVjTA.png"}, {"name": "Sado", "url": "https://xatimg.com/image/F7TQsh202nDF.png"}, {"name": "MixHits", "url": "https://xatimg.com/image/XDAC76CizTUR.png"}, {"name": "Portugal Online", "url": "https://xatimg.com/image/DgveYptL5cr9.png"}, {"name": "Wrs", "url": "https://xatimg.com/image/rMixqNPh7OIn.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/xPKnTeubHmA1.png"}, {"name": "Tuga", "url": "https://xatimg.com/image/3f1ug1Y2x7cc.png"}, {"name": "Dia e noite", "url": "https://xatimg.com/image/nWOjbFsbPjO8.png"}, {"name": "Mixhits", "url": "https://xatimg.com/image/kpzZkRTh68EP.png"}, {"name": "Alta Vibe", "url": "https://xatimg.com/image/WuKA0BJmAS1b.png"}, {"name": "Ostra Mix", "url": "https://xatimg.com/image/zApOXkW9qDN5.png"}, {"name": "RHB", "url": "https://xatimg.com/image/Y2c62VOOhgd8.png"}, {"name": "TUDJ", "url": "https://xatimg.com/image/dU0ORjYZRKYT.png"}, {"name": "TopHits", "url": "https://xatimg.com/image/vabVL43FdenZ.png"}, {"name": "Radio Tuga", "url": "https://xatimg.com/image/BzYap9VgNhSL.png"}, {"name": "WRS", "url": "https://xatimg.com/image/yxEgpzBr6ORX.png"}, {"name": "OstraDigital", "url": "https://xatimg.com/image/WRMlhGXnsbsj.png"}, {"name": "Doação", "url": "https://xatimg.com/image/k7BbRZz4dlpg.png"}],
+    pcbacks: [{"name": "Morgan", "url": "https://xatimg.com/image/RLQNui3yPYq6.png"}, {"name": "Lion", "url": "https://xatimg.com/image/PM0qk3wD5bTQ.png"}, {"name": "Luuh", "url": "https://xatimg.com/image/sXK5NqGiFnak.gif"}, {"name": "Reven", "url": "https://xatimg.com/image/Q9NOFl7TG8y0.png"}, {"name": "Morena", "url": "https://xatimg.com/image/rthT7D7V5IrG.png"}, {"name": "BadGirl", "url": "https://xatimg.com/image/FOOgNzXbDixr.png"}, {"name": "Gabr", "url": "https://xatimg.com/image/KBz1TfFbGWCg.png"}, {"name": "Theuz", "url": "https://xatimg.com/image/rmh6vvpjtkkd.png"}, {"name": "Thay", "url": "https://xatimg.com/image/djXxy6F61rc3.png"}, {"name": "Jorge", "url": "https://xatimg.com/image/je4vzk1nu9BW.png"}, {"name": "Suxa", "url": "https://xatimg.com/image/Nv0RtN45WR0O.png"}, {"name": "Pretinha", "url": "https://xatimg.com/image/RXyLBCkHEsov.png"}, {"name": "DjIguinho", "url": "https://xatimg.com/image/p2eQgUdf8eAB.png"}, {"name": "Morgan", "url": "https://xatimg.com/image/pvOJaLbuqN8T.png"}, {"name": "James", "url": "https://xatimg.com/image/yHgJKKM1DZKX.png"}, {"name": "Khels", "url": "https://xatimg.com/image/pBtL0oGgEePs.png"}, {"name": "Drica", "url": "https://xatimg.com/image/LNmVoQ56a2bo.png"}, {"name": "Marisol", "url": "https://xatimg.com/image/Zxzl8t0XYicC.png"}, {"name": "Venon", "url": "https://xatimg.com/image/uqu2B83SYEtP.png"}, {"name": "Morena", "url": "https://xatimg.com/image/uVXzrRSeStsI.png"}, {"name": "Feeh", "url": "https://xatimg.com/image/2bpjTbYyXJXP.png"}, {"name": "Khels", "url": "https://xatimg.com/image/fjSX9EpaTLUx.jpg"}, {"name": "Zaru", "url": "https://xatimg.com/image/p3Wsqg0nooKd.png"}, {"name": "Morgan", "url": "https://xatimg.com/image/9xV8rQutG4mQ.png"}, {"name": "Gold", "url": "https://xatimg.com/image/MDjHrNR02uCQ.png"}, {"name": "Khels", "url": "https://xatimg.com/image/XwB3x7OckUGW.png"}],
+    pstyle: [],
+    xatspaces: []
+  };
+  const CAT_LABELS = { fundos:'Fundos', pcbacks:'Pcbacks', pstyle:'Pstyle', xatspaces:'Xatspaces' };
+
+  const catOverlay = document.getElementById('catOverlay');
+  const catTitle = document.getElementById('catTitle');
+  const catGrid = document.getElementById('catGrid');
+  const catBack = document.getElementById('catBack');
+  const catClose = document.getElementById('catClose');
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  function openCategory(cat){
+    const items = GALLERY_DATA[cat] || [];
+    catTitle.textContent = CAT_LABELS[cat] || cat;
+    catGrid.innerHTML = '';
+    if(items.length === 0){
+      const empty = document.createElement('div');
+      empty.style.gridColumn = '1 / -1';
+      empty.style.textAlign = 'center';
+      empty.style.color = 'rgba(218,255,233,0.6)';
+      empty.style.fontFamily = "'Rajdhani',sans-serif";
+      empty.style.letterSpacing = '0.1em';
+      empty.style.padding = '2rem 0';
+      empty.textContent = 'Em breve.';
+      catGrid.appendChild(empty);
+    } else {
+      items.forEach(item=>{
+        const t = document.createElement('div');
+        t.className = 'thumb';
+        t.innerHTML = `<img src="${item.url}" alt="${item.name}" loading="lazy"><span class="thumb-label">${item.name}</span>`;
+        t.addEventListener('click', ()=> openLightbox(item));
+        catGrid.appendChild(t);
+      });
     }
+    galleryOverlay.classList.remove('open');
+    catOverlay.classList.add('open');
+  }
+  function closeCategory(){
+    catOverlay.classList.remove('open');
+  }
+  function backToGallery(){
+    catOverlay.classList.remove('open');
+    galleryOverlay.classList.add('open');
+  }
+  function openLightbox(item){
+    lightboxImg.src = item.url;
+    lightboxImg.alt = item.name;
+    lightboxCaption.textContent = item.name;
+    lightbox.classList.add('open');
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+  }
 
-    function update(){
-      currentX += (mouseX - currentX) * ease;
-      currentY += (mouseY - currentY) * ease;
-
-      title.style.transform = `translate3d(${currentX * 0.6}px, ${currentY * 0.9}px, 0)`;
-      subtitle.style.transform = `translate3d(${currentX * 0.35}px, ${currentY * 0.5}px, 0)`;
-      glass.style.transform = `translateZ(0) rotateX(${currentY*0.03}deg) rotateY(${-currentX*0.03}deg)`;
-
-      requestAnimationFrame(update);
+  document.querySelectorAll('.gallery-card').forEach(card=>{
+    card.addEventListener('click', ()=> openCategory(card.dataset.cat));
+  });
+  catBack.addEventListener('click', backToGallery);
+  catClose.addEventListener('click', ()=>{
+    closeCategory();
+    document.querySelector('.nav-item[data-view="home"]').classList.add('active');
+    document.getElementById('galeriaBtn').classList.remove('active');
+  });
+  catOverlay.addEventListener('click', (e)=>{ if(e.target === catOverlay) closeCategory(); });
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e)=>{ if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+      if(lightbox.classList.contains('open')) closeLightbox();
+      else if(catOverlay.classList.contains('open')) closeCategory();
     }
+  });
 
-    window.addEventListener('mousemove', onMove, {passive:true});
-    window.addEventListener('touchmove', onMove, {passive:true});
-    requestAnimationFrame(update);
-  </script>
+  // galeria overlay
+  const galeriaBtn = document.getElementById('galeriaBtn');
+  const galleryOverlay = document.getElementById('galleryOverlay');
+  const galleryClose = document.getElementById('galleryClose');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  function openGallery(){
+    galleryOverlay.classList.add('open');
+    navItems.forEach(n=>n.classList.remove('active'));
+    galeriaBtn.classList.add('active');
+  }
+  function closeGallery(){
+    galleryOverlay.classList.remove('open');
+    navItems.forEach(n=>n.classList.remove('active'));
+    document.querySelector('.nav-item[data-view="home"]').classList.add('active');
+  }
+  galeriaBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    galleryOverlay.classList.contains('open') ? closeGallery() : openGallery();
+  });
+  galleryClose.addEventListener('click', closeGallery);
+  galleryOverlay.addEventListener('click', (e)=>{
+    if(e.target === galleryOverlay) closeGallery();
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') closeGallery();
+  });
+  document.querySelector('.nav-item[data-view="home"]').addEventListener('click', (e)=>{
+    e.preventDefault();
+    closeGallery();
+  });
+  document.querySelector('.nav-item[data-view="contato"]').addEventListener('click', ()=>{
+    navItems.forEach(n=>n.classList.remove('active'));
+    document.querySelector('.nav-item[data-view="contato"]').classList.add('active');
+    closeGallery();
+  });
+
+  // mouse parallax
+  const depthEls = document.querySelectorAll('[data-depth]');
+  window.addEventListener('mousemove', (e)=>{
+    const cx = (e.clientX / window.innerWidth - 0.5);
+    const cy = (e.clientY / window.innerHeight - 0.5);
+    depthEls.forEach(el=>{
+      const depth = parseFloat(el.dataset.depth);
+      const tx = cx * depth * 300;
+      const ty = cy * depth * 300;
+      if(el.classList.contains('photo-wrap')){
+        el.style.transform = `translate(calc(-50% + ${tx}px), calc(-46% + ${ty}px))`;
+      } else {
+        el.style.transform = `translate(${tx}px, ${ty}px)`;
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
